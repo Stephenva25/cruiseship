@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cruise Ship Rentals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        :root {
+            --primary: #4b5d27;
+            --secondary: #85a547;
+            --accent: #daa520;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--primary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .feature-card:hover:before {
+            opacity: 0.1;
+        }
+
+        .feature-card:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotateY(180deg);
+            color: var(--accent);
+        }
+
+        .feature-card h3 {
+            position: relative;
+            z-index: 2;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover h3 {
+            color: var(--primary);
+        }
+
+        .location-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .location-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: var(--accent);
+        }
+
+        .location-card:hover:before {
+            opacity: 0.05;
+        }
+
+        .location-card * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .location-card h3 {
+            transition: color 0.3s ease;
+        }
+
+        .location-card:hover h3 {
+            color: var(--primary);
+        }
+
+        .counter-item {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .counter-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .counter-item:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .counter-item:hover:before {
+            left: 100%;
+        }
+
+        .counter-item:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .counter-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .counter-item:hover .counter-number {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateX(10px);
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .cta-button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover:before {
+            left: 100%;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .cta-button:hover {
+            animation: pulse 2s infinite;
+        }
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .location-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .location-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .section-divider {
+            text-align: center;
+            margin: 4rem 0;
+            padding: 2rem;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+            color: white;
+        }
+
+        .section-divider h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-divider p {
+            opacity: 0.9;
+        }
+
+        .counter-section {
+            margin: 4rem auto;
+            padding: 2rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .counter-item {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .counter-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .counter-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .counter-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .counter-item.animate {
+            animation: countUp 1s ease forwards;
+        }
+
+        .faq-section {
+            margin: 4rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--secondary);
+        }
+
+        .faq-answer {
+            padding: 1rem;
+            background: white;
+            border-top: 2px solid var(--accent);
+        }
+
+        .info-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .pickup-timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 20px;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: var(--primary);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 50%;
+            padding: 0 40px;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 15px;
+            height: 20px;
+            width: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -10px;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 15px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid white;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            left: -15px;
+            border-left: none;
+            border-right: 15px solid white;
+        }
+
+        .timeline-time {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+
+            .timeline-line {
+                left: 40px;
+            }
+
+            .timeline-item::before {
+                left: 31px;
+            }
+
+            .timeline-item:nth-child(even)::before {
+                left: 31px;
+            }
+
+            .timeline-content::after,
+            .timeline-item:nth-child(even) .timeline-content::after {
+                display: none;
+            }
+        }
+
+        .info-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .info-list li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-list li:before {
+            content: '✓';
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Cruise Ship Car Rentals</h1>
+            <p>Free pickup from Nawiliwili Harbor - Maximize your day in Kauai</p>
+            <br>
+            <a href="tel:8082456000" class="cta-button" style="background: var(--accent); color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; display: inline-block; font-weight: 600;">Call (808) 245-6000</a>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <h3>Extended Hours</h3>
+                <p>Open Daily 9:00am to 6:00pm</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3>Free Port Transfer</h3>
+                <p>Complimentary pickup/drop-off</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3>Easy Payment</h3>
+                <p>Multiple payment options</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Age 21+ Welcome</h3>
+                <p>Younger drivers accepted</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📍</div>
+                <h3>Close to Port</h3>
+                <p>Just minutes from cruise terminal</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Clean Vehicles</h3>
+                <p>Well-maintained fleet</p>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <h2>Popular Destinations</h2>
+            <p>Explore the best of Kauai during your cruise stop</p>
+        </div>
+
+        <div class="locations">
+            <div class="location-card">
+                <h3>Waimea Canyon</h3>
+                <p>Drive time: 2-3 hours</p>
+                <p>Grand Canyon of the Pacific</p>
+            </div>
+            <div class="location-card">
+                <h3>Hanalei Bay</h3>
+                <p>Drive time: 1.5 hours</p>
+                <p>Pristine beaches and mountain views</p>
+            </div>
+            <div class="location-card">
+                <h3>Wailua Falls</h3>
+                <p>Drive time: 30 min</p>
+                <p>Easy access double waterfall</p>
+            </div>
+            <div class="location-card">
+                <h3>Spouting Horn</h3>
+                <p>Drive time: 25 min</p>
+                <p>Natural ocean geyser</p>
+            </div>
+            <div class="location-card">
+                <h3>Opaekaa Falls</h3>
+                <p>Drive time: 20 min</p>
+                <p>Spectacular roadside waterfall</p>
+            </div>
+            <div class="location-card">
+                <h3>Poipu Beach</h3>
+                <p>Drive time: 30 min</p>
+                <p>Popular swimming & snorkeling</p>
+            </div>
+            <div class="location-card">
+                <h3>Kealia Beach</h3>
+                <p>Drive time: 15 min</p>
+                <p>Beautiful lifeguarded beach</p>
+            </div>
+            <div class="location-card">
+                <h3>Lydgate Beach</h3>
+                <p>Drive time: 10 min</p>
+                <p>Protected swimming area</p>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <h2>Pickup Process</h2>
+            <p>Quick and easy pickup from cruise terminal</p>
+        </div>
+
+        <div class="pickup-timeline">
+            <div class="timeline-line"></div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">Step 1 - Upon Arrival</div>
+                    <p>Call us at (808) 245-6000 when you're ready at Nawiliwili Harbor</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">Step 2 - 5 Minutes</div>
+                    <p>Meet our shuttle at the designated pickup area outside the terminal</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">Step 3 - 3 Minutes</div>
+                    <p>Quick drive to our location at 3030 Peleke Street</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">Step 4 - 5 Minutes</div>
+                    <p>Quick digital check-in and online paperwork process</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">Step 5 - You're Ready!</div>
+                    <p>Begin your Kauai adventure with your rental car</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="counter-section">
+            <div class="counter-grid">
+                <div class="counter-item">
+                    <div class="counter-number" data-target="2500">0</div>
+                    <div class="counter-label">Cruise Passengers Served</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number" data-target="5">0</div>
+                    <div class="counter-label">Minute Average Pickup</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number" data-target="100">0</div>
+                    <div class="counter-label">% On-Time Returns</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number" data-target="55">0</div>
+                    <div class="counter-label">Vehicle Options Available</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <h2>Frequently Asked Questions</h2>
+            <p>Common questions from cruise ship passengers</p>
+        </div>
+
+        <div class="faq-section">
+            <div class="faq-item">
+                <div class="faq-question">What if our ship arrives early or late?</div>
+                <div class="faq-answer">We monitor cruise ship schedules and adjust pickup times accordingly. Just call us when you're ready!</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What's needed for pickup?</div>
+                <div class="faq-answer">Just a valid driver's license. Insurance can be provided for a fee if you don't have coverage.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Do you guarantee return to ship on time?</div>
+                <div class="faq-answer">Yes! We ensure you're back at least 1 hour before departure. We're just minutes from the port.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What if we want to extend rental time?</div>
+                <div class="faq-answer">Call us anytime to extend your rental if your ship schedule allows - subject to availability.</div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>Rental Requirements</h2>
+            <ul class="info-list">
+                <li>Valid driver's license</li>
+                <li>Major credit card</li>
+                <li>Proof of insurance</li>
+                <li>Cruise ship documentation</li>
+            </ul>
+            <br>
+            <a href="tel:8082456000" class="cta-button" style="background: var(--accent); color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; display: inline-block; font-weight: 600;">Call (808) 245-6000</a>
+        </div>
+    </div>
+    <script>
+        // Counter animation
+        const counters = document.querySelectorAll('.counter-number');
+        const speed = 200; // Animation speed - lower is faster
+
+        const animateCounter = (counter) => {
+            const target = +counter.getAttribute('data-target');
+            let count = 0;
+            const inc = target / speed;
+
+            const updateCount = () => {
+                if(count < target) {
+                    count = Math.min(count + inc, target);
+                    counter.innerText = Math.ceil(count);
+                    requestAnimationFrame(updateCount);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+
+            updateCount();
+        };
+
+        // Start animation when elements come into view
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const counterItem = entry.target;
+                    counterItem.classList.add('animate');
+                    const counter = counterItem.querySelector('.counter-number');
+                    animateCounter(counter);
+                    observer.unobserve(counterItem);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.counter-item').forEach(item => {
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>
